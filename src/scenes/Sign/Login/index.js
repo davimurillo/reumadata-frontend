@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import api from "../../../services/api"
 import {style} from "typestyle";
 
-const className = style({
+const cuerpo = style({
   opacity: 100,
   position: "fixed",
   zIndex: 10,
@@ -11,10 +11,23 @@ const className = style({
   top: 0,
   width: "100%",
   height: "100%",
-  backgroundImage: "url(./images/back_login.jpg)",
+  backgroundColor: "#0288D1",
+})
+const titulo = style({
+  fontFamily: "Mogra",
+  fontSize: 96,
+})
+const tituloData = style({
+  fontFamily: "Mogra",
+  fontSize: 96,
+  color: "#03045E"
+})
+const formLogin = style({
+  backgroundColor: "#11819E",
 })
 
-const doctors= require("../../../assets/img/doctors.jpg")
+const doctors= require("../../../assets/img/back_doctors.png")
+const enfermera= require("../../../assets/img/enfermera.png")
 const login= require("../../../assets/img/back_login.jpg")
 
 class Login extends Component {
@@ -48,48 +61,40 @@ class Login extends Component {
   }
   render(){
     return (
-      <div className={"w-full bg-cover bg-center "+className} >
-        <div className="flex items-center justify-center h-full w-full bg-gray-900 bg-opacity-50"
-        >
-          <div className="w-full max-w-lg">
-            <div className="leading-loose">
-              <form
-                className="max-w-sm m-4 p-10 bg-white bg-opacity-25 rounded shadow-xl"
-              >
-                <img src={doctors.default} />
-                <p className="text-white font-medium text-center text-lg font-bold">
-                  BIENVENIDO
-                </p>
-                <div className="">
+      <div className={"w-full bg-cover bg-center "+cuerpo} >
+        <div className="flex flex-col h-full w-full items-center">
+          <div className={""}>
+            <span className={"titulo text-white text-center " + titulo}>REUMA</span><span className={"text-center " + tituloData}>DATA</span>
+          </div>
+          <div className={"flex flex-row w-full"}>
+            <div className={"basis-1/2 m-20"}>
+              <img className={"ml-auto"} src={doctors.default}/>
+            </div>
+            <div className={formLogin + " rounded-lg basis-1/2 m-20"}>
+              <form className={"flex-col m-10 space-y-8 px-20"}>
+                  <img className={"max-h-36 m-auto"} src={enfermera.default}/>
                   <input
-                    className="w-full px-5 py-1 text-gray-700 bg-gray-300 rounded focus:outline-none focus:bg-white"
+                    className={"w-full h-20 px-5 py-2 text-xl text-gray-700 rounded bg-input-green"}
                     type="email"
                     id="email"
-                    placeholder="Usuario"
+                    placeholder="Correo electrónico"
                     aria-label="email"
-                    required
-                  />
-                </div>
-                <div className="mt-2">
+                    required/>
                   <input
-                    className="w-full px-5 py-1 text-gray-700 bg-gray-300 rounded focus:outline-none focus:bg-white"
+                    className="w-full h-20 px-5 py-2 text-xl text-gray-700 bg-input-green rounded "
                     type="password"
                     id="password"
                     placeholder="Contraseña"
                     arial-label="password"
                     required
                   />
-                </div>
-
-                <div className="mt-4 w-full items-center flex justify-between">
-                  <button
+                <input
+                    type={"button"}
                     onClick={this._login}
-                    className="text-white font-bold w-full px-4 py-1 text-white font-light tracking-wider  hover:bg-gray-800 rounded"
-                  >
-                    ENTRAR
-                  </button>
-                </div>
-              </form>
+                    value={"INGRESAR"}
+                    className={"w-full h-20 px-5 py-2 text-4xl text-white bg-[#03045E] " +
+                        "hover:bg-[#023e8a] font-dark font-['Mogra']" } />
+                </form>
             </div>
           </div>
         </div>

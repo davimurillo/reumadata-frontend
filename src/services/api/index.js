@@ -1,22 +1,53 @@
-import config from '../../services/config'
+import apiConfig from '../../services/config'
+import _ from "lodash";
+import store from '../../store';
 
-const fetchApi = (endPoint, method = 'get', payload = undefined) => {
+export const fetchApi = (
+  endPoint,
+  payload = undefined,
+  method = "get",
+  headers = {},
+) => {
+  console.log("DATA:", payload);
+  const user = store.getState().user
+  const accessToken = user.tokens ? user.tokens.access_token : "";
+  console.log("ACCESS");
+  console.log(accessToken);
+  let params = {
+    headers: _.pickBy({
+        ...(accessToken? { Authorization: `Bearer ${accessToken}` } : {}),
+        ...headers
+      },
+      item => !_.isEmpty(item)
+    ),
+    method: method.toLowerCase(),
+    body: payload
+  };
 
-    let headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
+  async function handleResponses (response) {
+
+    if (!response)
+      return response;
+
+    if (!response.ok && response.status == 401) {
+
+      let state = await NetInfo.fetch();      // Finding out what happened
+
+      if (state.isConnected) {              // Something bad, because we are connected and even so we were rejected in the server;
+        session.revoke();
+        AsyncStorage.removeItem('lastEvent');
+      }
+      return null;
     }
-    let params = {headers, method, body: payload}
-    return fetch(config.url + endPoint, params)
-        .then(resp => {
-                return resp.json()
-            },
-            err => {
-                alert(err);
-            })
-        .catch(resp => {
-            alert(resp)
-        })
-}
+    return response;
+  };
 
-export default fetchApi;
+  return fetch(`${apiConfig.url}${endPoint}`, params)
+    .then(handleResponses)
+    .catch(e => {
+      if (e.response && e.response.json)
+        e.response.json().then(json => { throw (json  ? json :  e) })
+      else
+        throw e;
+    });
+};

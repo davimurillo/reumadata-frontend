@@ -3,7 +3,7 @@ import {Route, Routes, } from "react-router-dom";
 import Login from "./scenes/Sign/Login";
 import Home from "./scenes/Home";
 import {Pacientes} from "./scenes/Pacientes";
-import {NuevoPaciente} from "./scenes/Pacientes/nuevo";
+import {NuevoPaciente} from "./scenes/Pacientes/NuevoPaciente";
 
 function App() {
   return (

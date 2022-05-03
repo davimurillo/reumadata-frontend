@@ -1,5 +1,7 @@
-import React, {useState} from "react";
+import React, {Component, useState} from "react";
 import DatePicker from "react-datepicker";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faTrashCan, faCirclePlus, faEdit} from "@fortawesome/free-solid-svg-icons";
 
 
 // function Field(props){
@@ -52,19 +54,33 @@ import DatePicker from "react-datepicker";
 
 function extField(FieldComponent){
   return (props) => (
-    <div className={"my-2 "+props.className}>
-      <span className="text-slate-900 dark:text-slate-200 text-sm font-medium">{props.label}</span>
-      <FieldComponent {...props}/>
+
+    <div className={props.className ? "my-2 " + props.className : "my-2" }>
+      {props.label &&
+        <span className="text-slate-900 dark:text-slate-200 text-sm font-medium">{props.label}</span>
+      }
+        <FieldComponent {...props}/>
     </div>
   )
 }
 
+export const Check = function (props){
+  return(
+    <label className="inline-flex items-center w-1/12">
+      <input type={"checkbox"} className="form-checkbox h-6 w-6"/>
+    </label>
+  )
+}
+
 export const Input = extField(function(props){
+  const validations = props.validations
+  const type = validations && validations.type ? validations.type : "text"
   return (
       <input className={"block text-sm leading-5 w-full py-2 px-3 " +
         "border-2 border- text-slate-500 rounded-lg shadow-sm " +
         "focus:outline-none focus:border-blue-500 "}
-        placeholder={props.placeholder}
+        placeholder={props.placeholder} value={props.value}
+        type = {type}
       />
   )
 })
@@ -155,3 +171,104 @@ export const SelectPlace = extField(function(props){
     </div>
   )
 })
+
+export const BoolText = extField(function(props){
+
+  const {entradas} = props;
+  const handleEliminar = (e, index) => {
+    e.preventDefault();
+    let nuevaLista = entradas.slice();
+    nuevaLista.pop(index)
+    props.agregar(nuevaLista)
+  }
+  const handleAgregar = (e) => {
+    e.preventDefault();
+    props.agregar([...entradas, {nombre:""}])
+  }
+  return (
+    <>
+    { entradas && entradas.map((item, index) => {
+    return(
+    <div className={"flex my-2"}>
+      <Input placeholder={props.placeholder} className={"w-10/12"}
+      />
+      <button onClick={(e) => handleEliminar(e, index)} className={"w-1/12 bg-red-400 mx-2 rounded"}>
+        <FontAwesomeIcon icon={faTrashCan} inverse />
+      </button>
+      {index === entradas.length - 1 &&
+      <button onClick={handleAgregar} className={"w-1/12 bg-blue-400 mx-2 rounded"}>
+        <FontAwesomeIcon icon={faCirclePlus} inverse />
+      </button>}
+    </div>
+    )})}
+   </>
+  )
+})
+
+export const ItemModel = extField(function(props){
+
+  const {entradas} = props;
+  const handleAgregar = (e) => {
+    e.preventDefault();
+    props.agregar([...entradas, {nombre:""}])
+  }
+  const handleEliminar = (e, index) => {
+    e.preventDefault();
+    let nuevaLista = entradas.slice();
+    nuevaLista.pop(index)
+    props.agregar(nuevaLista)
+  }
+  return (
+    <>
+      { entradas && entradas.map((item, key) => {
+        return(
+            <div className={"flex my-2 justify-between"}>
+              <label className="inline-flex items-center w-1/12">
+                <input type={"checkbox"} className="form-checkbox h-6 w-6"/>
+              </label>
+              <Input value={item['nombre']}
+                     className={"w-7/12"}
+                     placeholder={props.placeholder}
+              />
+
+              <Select values={{AN:"Antes", AC: "Actual"}} className={"w-2/12"}/>
+              <button onClick={handleEliminar} className={"w-1/12 bg-red-400 mx-2 rounded"}>
+                <FontAwesomeIcon icon={faTrashCan} inverse />
+              </button>
+              {key === entradas.length - 1 &&
+                <button onClick={handleAgregar} className={"w-1/12 bg-blue-400 mx-2 rounded"}>
+                  <FontAwesomeIcon icon={faCirclePlus} inverse />
+                </button>}
+            </div>
+
+        )})}
+    </>
+  )
+})
+
+export const Observation = function (props){
+  const [areaView, setAreView] = useState(false);
+
+  const newNode = (
+    <div className={"inline-flex items-center w-full "}>
+      <textarea />
+    </div>
+  )
+  const addObs = (e) => {
+    e.preventDefault();
+
+
+    setAreView(true)
+    console.log("FINAL:", e.target.parentNode);
+  }
+  return(
+    <div className={"inline-flex items-center w-1/12 pl-0.5"}>
+      <button onClick={addObs} className={"h-8 w-8 bg-amber-500 rounded items-center"}>
+        <FontAwesomeIcon icon={faEdit} inverse />
+      </button>
+    </div>
+
+  )
+}
+
+

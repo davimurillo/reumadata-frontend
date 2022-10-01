@@ -13,7 +13,7 @@ import {faTrashCan, faCirclePlus, faEdit} from "@fortawesome/free-solid-svg-icon
 //   const [erros, setErrors] = useState([]);
 //
 //   function changeValue(value){
-//     this.setState({value: value});
+//     setValue(value);
 //     this.setState({isModified: true});
 //     if (this.state.handler){
 //       if (this.props.keyItem){
@@ -86,10 +86,12 @@ export const Input = extField(function(props){
 })
 
 export const Select = extField(function(props){
+  let value = props.label || "Selección"
   return(
-    <select className={"block text-sm leading-5 w-full py-2 px-3 " +
+    <select defaultValue={value} className={"block text-sm leading-5 w-full py-2 px-3 " +
       "border-2 border- text-slate-500 rounded-lg shadow-sm " +
       "focus:outline-none focus:border-blue-500"}>
+      <option disabled>{value}</option>
       {Object.keys(props.values).map((key)=>{
         return <option key={key} value={key} className="">{props.values[key]}</option>
       })}
@@ -102,6 +104,7 @@ export const CustomDatePicker = extField(function (props){
 
   return(
       <DatePicker selected={startDate}
+
                   className={"block text-sm leading-5 w-full py-2 px-3 " +
                     "border-2 border- text-slate-500 rounded-lg shadow-sm " +
                     "focus:outline-none focus:border-blue-500 " }
@@ -131,10 +134,10 @@ export const SelectPlace = extField(function(props){
 
   return(
     <div className={"grid grid-cols-2 "}>
-      <select placeholder={"País"} onChange={changePais}  className={"block text-sm leading-5 py-2 px-3 " +
+      <select defaultValue={"Selecciona el país"} placeholder={"País"} onChange={changePais}  className={"block text-sm leading-5 py-2 px-3 " +
         "border-2 border- text-slate-500 rounded-lg shadow-sm " +
         "focus:outline-none focus:border-blue-500"}>
-        <option disabled selected>Selecciona el país</option>
+        <option disabled>Selecciona el país</option>
         <option key={'PE'} value={'PE'} className="">Peruano</option>
         <option key={'EX'} value={'EX'} className="">Extranjero</option>
         })}
@@ -246,7 +249,7 @@ export const ItemModel = extField(function(props){
   )
 })
 
-export const Observation = function (props){
+export const TextArea = function (props){
   const [areaView, setAreView] = useState(false);
 
   const newNode = (
@@ -261,14 +264,18 @@ export const Observation = function (props){
     setAreView(true)
     console.log("FINAL:", e.target.parentNode);
   }
-  return(
+  return props.multiLinea ?
     <div className={"inline-flex items-center w-1/12 pl-0.5"}>
       <button onClick={addObs} className={"h-8 w-8 bg-amber-500 rounded items-center"}>
         <FontAwesomeIcon icon={faEdit} inverse />
       </button>
+    </div> :
+    <div className={props.className + " inline-flex items-center "}>
+      <textarea placeholder={props.placeholder}
+                className={" block text-sm leading-5 w-full py-2 px-3 " +
+        "border-2 border- text-slate-500 rounded-lg shadow-sm " +
+        "focus:outline-none focus:border-blue-500 "}/>
     </div>
-
-  )
 }
 
 

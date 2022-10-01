@@ -65,3 +65,16 @@ export const COMPLICACIONES_PARTO = [
   {nombre: "Infección post parto"},
 ]
 
+export const COMORBILIDADES = [
+  {nombre: "Diabetes mellitus"},
+  {nombre: "Hipertensión arterial"},
+  {nombre: "Tuberculosis extrapulmonar"},
+  {nombre: "Tuberculosis pulmonar"},
+  {nombre: "Obesidad"},
+  {nombre: "Osteoporosis"},
+  {nombre: "Hipotiroidismo"},
+  {nombre: "Hipertiroidismo"},
+  {nombre: "Asma"},
+  {nombre: "COVID 19"},
+]
+

@@ -7,8 +7,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import {Link} from "react-router-dom";
 import * as core from "../../services/core";
 import {useSelector} from "react-redux";
-import {COMPLICACIONES_GESTACION, COMPLICACIONES_PARTO, HABITOS_TOXICOS} from "./constants";
-import {INMUNIZACIONES} from "./constants";
+import {COMORBILIDADES, COMPLICACIONES_GESTACION, } from "./constants";
+import {INMUNIZACIONES, COMPLICACIONES_PARTO, HABITOS_TOXICOS} from "./constants";
 import {GINECO_OBSTETRICOS} from "./constants";
 import {ETNIAS, GRADOS, ESTADOS} from "./constants";
 
@@ -19,10 +19,11 @@ export function NuevoPaciente(){
   const [familiares, setFamiliares] = useState([{nombre:"", custom:true}])
   const [inmunizaciones, setInmunizaciones] = useState(INMUNIZACIONES)
   const [ginecoObstetricos, setGinecoObstetricos] = useState([{nombre:""}])
-  const [metodosAnticonceptivos, setMetodosAnticonceptivos] = useState([{nombre:""}])
+  const [metodosAnticonceptivos, setMetodosAnticonceptivos] = useState([])
   const [complicacionesGestacion, setComplicacionesGestacion] = useState(COMPLICACIONES_GESTACION)
   const [complicacionesParto, setComplicacionesParto] = useState(COMPLICACIONES_PARTO)
   const [habitos, setHabitos] = useState(HABITOS_TOXICOS)
+  const [comorbilidades, setComorbilidad] = useState(COMORBILIDADES)
   const state = useSelector(state => state.core);
 
 
@@ -45,7 +46,6 @@ export function NuevoPaciente(){
             GUARDAR Y SALIR
           </Link>
         </div>
-
         <ul className='mt-1 border-b-2 solid flex items-stretch cursor-pointer rounded'>
           {tabs.map((tab, index) => {
             return (
@@ -84,30 +84,39 @@ export function NuevoPaciente(){
             activeTab === "Antecedentes" &&
             <form>
               <div className={"grid grid-cols-2 space-x-2"}>
-                <CustomItem label={"Reacciones Alérgicas"}
-                          entradas={alergias}
-                          agregar={setAlergias}
-                          className={"ml-2"}
-                          fields={[{name:"Input", className:"w-11/12", placeholder:"Agregar Medicamento" }]}/>
-                <CustomItem label={"Antecedentes de enfermedades autoinmunes en familiares"}
-                          entradas={familiares}
-                          agregar={setFamiliares}
-                          fields={[{name:"Input", className:"w-11/12", placeholder:"Agregar enfermedad"}]}/>
-                <CustomItem label={"Hábitos tóxicos"}
-                            entradas={habitos}
-                            agregar={setHabitos}
-                            fields={[{name:"Check", className:"w-1/12"},
-                              {name:"Input", className:"w-8/12", placeholder:"Agregar hábito"},
-                              {name:"Select", className:"w-3/12",
-                                values:{AN:"Antes", AC: "Actual"}}]}/>
-                <CustomItem label={"Inmunizaciones"}
-                            entradas={inmunizaciones}
-                            agregar={setInmunizaciones}
-                            fields={[{name:"Check", className:"w-1/12"},
-                              {name:"Input", className:"w-7/12", placeholder:"Agregar inmunización"},
-                              {name:"CustomDatePicker", className:"w-3/12"},
-                              {name:"Observation", className: "w-1/12"}
-                            ]}/>
+                <CustomItem
+                  id={"alergias"}
+                  label={"Reacciones Alérgicas"}
+                  entradas={alergias}
+                  agregar={setAlergias}
+                  className={"ml-2"}
+                  fields={[{name:"Input", className:"w-11/12", placeholder:"Agregar Medicamento" }]}/>
+                <CustomItem
+                  id={"autoinmunes"}
+                  label={"Antecedentes de enfermedades autoinmunes en familiares"}
+                  entradas={familiares}
+                  agregar={setFamiliares}
+                  fields={[{name:"Input", className:"w-11/12", placeholder:"Agregar enfermedad"}]}/>
+                <CustomItem
+                  id={"habitos"}
+                  label={"Hábitos tóxicos"}
+                  entradas={habitos}
+                  agregar={setHabitos}
+                  fields={[
+                    {name:"Check", className:"w-1/12"},
+                    {name:"Input", className:"w-8/12", placeholder:"Agregar hábito"},
+                    {name:"Select", className:"w-3/12",
+                      values:{AN:"Antes", AC: "Actual"}}]}/>
+                <CustomItem
+                  id={"inmunizaciones"}
+                  label={"Inmunizaciones"}
+                  entradas={inmunizaciones}
+                  agregar={setInmunizaciones}
+                  fields={[{name:"Check", className:"w-1/12"},
+                    {name:"Input", className:"w-7/12", placeholder:"Agregar inmunización"},
+                    {name:"CustomDatePicker", className:"w-3/12"},
+                    {name:"TextArea", multiLinea: true, className: "w-1/12"}
+                  ]}/>
 
 
               </div>
@@ -116,54 +125,86 @@ export function NuevoPaciente(){
           {
             activeTab === "Antecedentes gineco-obstetricos" &&
             <form>
-              <div className={"grid grid-cols-2 space-x-2"}>
+              <div className={"grid grid-cols-3 space-x-2"}>
 
-                <CustomItem label={"Amenorrea"}
-                            entradas={ginecoObstetricos}
-                            agregar={setGinecoObstetricos}
-                            esUnico={true}
-                            fields={[{name:"Check", className:"w-1/12"},
-                              {name:"Input", className:"w-7/12", placeholder:"Duración - tiempo"},
-                              {name:"Select", className:"w-3/12",
-                                values:{DI:"Días", ME: "Meses", AN: "Años"}},
-                            ]}/>
-                <CustomItem label={"Método anticonceptivo"}
-                            entradas={metodosAnticonceptivos}
-                            agregar={setMetodosAnticonceptivos}
-                            fields={[{name:"Check", className:"w-1/12"},
-                              {name:"Input", className:"w-7/12", placeholder:"Agregar método anticonceptivo"},
-                            ]}/>
-                <CustomItem label={"Embarazos"}
-                            entradas={metodosAnticonceptivos}
-                            agregar={setMetodosAnticonceptivos}
-                            esUnico={true}
-                            fields={[
-                              {name:"Input", className:"w-4/12", placeholder:"N. de gestaciones"},
-                              {name:"Input", className:"w-4/12", placeholder:"N. de abortos"},
-                              {name:"Input", className:"w-4/12", placeholder:"N. de partos pretérmino"},
-                            ]}/>
-                <CustomItem label={"Embarazos"}
-                            entradas={metodosAnticonceptivos}
-                            agregar={setMetodosAnticonceptivos}
-                            esUnico={true}
-                            fields={[
-                              {name:"Input", className:"w-4/12", placeholder:"N. de partos a término"},
-                              {name:"Input", className:"w-4/12", placeholder:"Óbitos"},
-                              {name:"Input", className:"w-4/12", placeholder:"Natimuertos"},
-                            ]}/>
-                <CustomItem label={"Complicaciones durante la gestación"}
-                            entradas={complicacionesGestacion}
-                            agregar={setComplicacionesGestacion}
-                            fields={[{name:"Check", className:"w-1/12"},
-                              {name:"Input", className:"w-6/12", placeholder:"Agregar complicación"},
-                            ]}/>
-                <CustomItem label={"Complicaciones durante el parto"}
-                            entradas={complicacionesParto}
-                            agregar={setComplicacionesParto}
-                            fields={[{name:"Check", className:"w-1/12"},
-                              {name:"Input", className:"w-6/12", placeholder:"Agregar complicación"},
-                            ]}/>
 
+
+                <Input placeholder={"XXXXXXXX"}
+                       label={"Número de gestaciones"}
+                       className={"ml-2"}
+                       validations={{type:"number"}}/>
+                <Input placeholder={"XXXXXXXX"}
+                       label={"Número de abortos"}
+                       validations={{type:"number"}}/>
+                <Input placeholder={"XXXXXXXX"}
+                       label={"Número de partos pretérmino"}
+                       validations={{type:"number"}}/>
+                <Input placeholder={"XXXXXXXX"}
+                       label={"Número de gestaciones"}
+                       validations={{type:"number"}}/>
+                <Input placeholder={"XXXXXXXX"}
+                       label={"Número de abortos"}
+                       validations={{type:"number"}}/>
+                <Input placeholder={"XXXXXXXX"}
+                       label={"Número de partos pretérmino"}
+                       validations={{type:"number"}}/>
+                <CustomItem
+                  id={"gestacion"}
+                  label={"Complicaciones durante la gestación"}
+                  entradas={complicacionesGestacion}
+                  agregar={setComplicacionesGestacion}
+                  fields={[{name:"Check", className:"w-1/12"},
+                    {name:"Input", className:"w-11/12", placeholder:"Agregar complicación"},
+                  ]}/>
+                <CustomItem
+                  id={"parto"}
+                  label={"Complicaciones durante el parto"}
+                  entradas={complicacionesParto}
+                  agregar={setComplicacionesParto}
+                  fields={[{name:"Check", className:"w-1/12"},
+                    {name:"Input", className:"w-11/12", placeholder:"Agregar complicación"},
+                  ]}/>
+                <CustomItem
+                  id={"amenorrea"}
+                  label={"Amenorrea"}
+                  entradas={ginecoObstetricos}
+                  agregar={setGinecoObstetricos}
+                  esUnico={true}
+                  fields={[
+                    {name:"Input", className:"w-8/12", placeholder:"Duración - tiempo"},
+                    {name:"Select", className:"w-4/12",
+                      values:{DI:"Días", ME: "Meses", AN: "Años"}},
+                  ]}/>
+                <CustomItem
+                  id={"anticonceptivos"}
+                  label={"Método anticonceptivo"}
+                  entradas={metodosAnticonceptivos}
+                  agregar={setMetodosAnticonceptivos}
+                  fields={[
+                    {name:"Input", className:"w-11/12", placeholder:"Agregar método anticonceptivo"},
+                  ]}
+                />
+
+              </div>
+            </form>
+          }
+          {
+            activeTab === "Comorbilidad" &&
+            <form>
+              <div className={"grid space-x-2"}>
+                <CustomItem
+                  id={null}
+                  label={"Comorbilidades"}
+                  entradas={comorbilidades}
+                  agregar={setComorbilidad}
+                  fields={[{name:"Check", className:"w-1/12"},
+                    {name:"Input", className:"w-4/12", placeholder:""},
+                    {name:"Select", className:"w-1/12",
+                      values:{AN:"Antes", DU: "Durante", DE: "Después"}},
+                    {name:"CustomDatePicker", className:"w-1/12"},
+                    {name:"CustomDatePicker", className:"w-1/12"},
+                    {name:"TextArea", multiLinea: false, className: "w-4/12", placeholder:"Tratamiento"}
+                  ]}/>
               </div>
             </form>
           }

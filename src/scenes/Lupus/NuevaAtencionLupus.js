@@ -6,12 +6,12 @@ import {CustomItem} from "../../components/Forms/custom";
 import {MANIFESTACIONES_SISTEMICAS} from "../Lupus/constants";
 
 export function NuevoLupus(){
-  const [activeTab, setActiveTab] = useState('MANIFESTACIONES SISTÉMICAS');
+  const [activeTab, setActiveTab] = useState('MS');
   const [manifestaciones, setManifestaciones] = useState(MANIFESTACIONES_SISTEMICAS)
+  const [mucocutaneo, setMucocutaneo] = useState(MANIFESTACIONES_SISTEMICAS)
 
   const tabs = {
-    MS: 'MANIFESTACIONES SISTÉMICAS',
-    MC: 'MUCOCUTÁNEO',
+    MS: 'MANIFESTACIONES SISTÉMICAS Y MUCOCUTANEO',
     ME: 'MUSCULOESQUELÉTICO',
     NP: 'NEUROPSIQUIÁTRICO',
     OL: 'OTORRINOLARINGOLÓGICO',
@@ -29,17 +29,17 @@ export function NuevoLupus(){
           <Titulo titulo={"Nueva atención de Lupus"}/>
         </div>
         <ul className='mt-1 border-b-2 solid flex items-stretch cursor-pointer rounded'>
-          {Object.values(tabs).map((tab, index) => {
+          {Object.keys(tabs).map((tab, index) => {
             return (
               <li key={index} className={'flex py-2 px-6 rounded-t-lg bg-white items-center ' +
                 (activeTab === tab ? 'bg-white border-b-4 border-sky-600 ' : 'text-gray-500')}
                   onClick={()=> setActiveTab(tab)}
-              >{tab}</li>
+              >{tabs[tab]}</li>
             )
           })}
         </ul>
         <div>
-          {activeTab === tabs.MS &&
+          {activeTab === "MS" &&
           <form>
             <div className={"grid grid-cols-2 space-x-2"}>
               <CustomItem
@@ -57,12 +57,32 @@ export function NuevoLupus(){
                   {name:"Input", className:"w-2/12", placeholder:"Talla"},
                   {name:"Select", className:"w-3/12", values:{
                     N:"Normal < 5%", L: "Leve : 5 – 10%", M:"Moderado : 11-15%", S:"Severo ≥ 16%"}},
-                  ]},{cantidad:1, campos:[{name:"Check", className:"w-1/12"},
-                  {name: "Input", className: "w-2/12", placeholder: "Detalle"}
+                  ]},{cantidad:3, campos:[{name:"Check", className:"w-1/12"},
+                  {name: "Input", className: "w-3/12", placeholder: "Nombre"},
+                  {name: "TextArea", className: "w-8/12", placeholder: "Detalle"}
                 ]}]
-              }>
+              }/>
+              <CustomItem
+                id={"mucocutaneo"}
+                label={"Mucocutaneo"}
+                entradas={mucocutaneo}
+                agregar={setMucocutaneo}
+                fields={[{cantidad:4, campos: [
+                    {name:"Check", className:"w-1/12"},
+                    {name:"Input", data:"nombre", className:"w-11/12", placeholder:"Agregar manifestación"}
+                  ]},{cantidad:1, campos: [
+                    {name:"Check", className:"w-1/12"},
+                    {name:"Input", data:"nombre", className:"w-5/12", placeholder:"Agregar manifestación"},
+                    {name:"Input", className:"w-2/12", placeholder:"Peso"},
+                    {name:"Input", className:"w-2/12", placeholder:"Talla"},
+                    {name:"Select", className:"w-3/12", values:{
+                        N:"Normal < 5%", L: "Leve : 5 – 10%", M:"Moderado : 11-15%", S:"Severo ≥ 16%"}},
+                  ]},{cantidad:3, campos:[{name:"Check", className:"w-1/12"},
+                    {name: "Input", className: "w-3/12", placeholder: "Nombre"},
+                    {name: "TextArea", className: "w-8/12", placeholder: "Detalle"}
+                  ]}]
+                }/>
 
-              </CustomItem>
 
             </div>
           </form>

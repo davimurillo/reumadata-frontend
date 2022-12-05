@@ -74,11 +74,12 @@ export const Check = function (props){
 
 export const Input = extField(function(props){
   const validations = props.validations
+  console.log(props);
   const type = validations && validations.type ? validations.type : "text"
   return (
       <input className={"block text-sm leading-5 w-full py-2 px-3 " +
         "border-2 border- text-slate-500 rounded-lg shadow-sm " +
-        "focus:outline-none focus:border-blue-500 "}
+        "focus:outline-none focus:border-blue-500 " }
         placeholder={props.placeholder} value={props.value}
         type = {type}
       />
@@ -270,7 +271,7 @@ export const TextArea = function (props){
         <FontAwesomeIcon icon={faEdit} inverse />
       </button>
     </div> :
-    <div className={props.className + " inline-flex items-center "}>
+    <div className={props.className + " my-2"}>
       <textarea placeholder={props.placeholder}
                 className={" block text-sm leading-5 w-full py-2 px-3 " +
         "border-2 border- text-slate-500 rounded-lg shadow-sm " +

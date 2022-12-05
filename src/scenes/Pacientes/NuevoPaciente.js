@@ -90,23 +90,43 @@ export function NuevoPaciente(){
                   entradas={alergias}
                   agregar={setAlergias}
                   className={"ml-2"}
-                  fields={[{name:"Input", className:"w-11/12", placeholder:"Agregar Medicamento" }]}/>
+                  fields={[{cantidad:1, campos: [
+                      {name:"Input", className:"w-11/12", placeholder:"Agregar Medicamento" }]},
+                    {cantidad:10, campos: [
+                      {name:"Input", className:"w-11/12", placeholder:"Agregar Medicamento" }]},
+                  ]}/>
                 <CustomItem
                   id={"autoinmunes"}
                   label={"Antecedentes de enfermedades autoinmunes en familiares"}
                   entradas={familiares}
                   agregar={setFamiliares}
-                  fields={[{name:"Input", className:"w-11/12", placeholder:"Agregar enfermedad"}]}/>
+                  fields={[
+                    {cantidad:1, campos: [
+                      {name:"Input", className:"w-11/12", placeholder:"Agregar enfermedad"}
+                    ]},
+                    {cantidad:10, campos: [
+                        {name:"Input", className:"w-11/12", placeholder:"Agregar enfermedad"}
+                      ]},
+                  ]}/>
                 <CustomItem
                   id={"habitos"}
                   label={"Hábitos tóxicos"}
                   entradas={habitos}
                   agregar={setHabitos}
                   fields={[
-                    {name:"Check", className:"w-1/12"},
-                    {name:"Input", className:"w-8/12", placeholder:"Agregar hábito"},
-                    {name:"Select", className:"w-3/12",
-                      values:{AN:"Antes", AC: "Actual"}}]}/>
+                    {cantidad:3, campos: [
+                      {name:"Check", className:"w-1/12"},
+                      {name:"Input", className:"w-8/12", data:"nombre", placeholder:"Agregar hábito"},
+                      {name:"Select", className:"w-3/12",
+                        values:{AN:"Antes", AC: "Actual"}}
+                      ]},
+                    {cantidad:10, campos: [
+                        {name:"Check", className:"w-1/12"},
+                        {name:"Input", className:"w-8/12", placeholder:"Agregar hábito"},
+                        {name:"Select", className:"w-3/12",
+                          values:{AN:"Antes", AC: "Actual"}}
+                      ]},
+                  ]}/>
                 <CustomItem
                   id={"inmunizaciones"}
                   label={"Inmunizaciones"}
@@ -197,14 +217,19 @@ export function NuevoPaciente(){
                   label={"Comorbilidades"}
                   entradas={comorbilidades}
                   agregar={setComorbilidad}
-                  fields={[{name:"Check", className:"w-1/12"},
-                    {name:"Input", className:"w-4/12", placeholder:""},
+                  fields={[{cantidad:10, campos: [
+                    {name:"Check", className:"w-1/12"},
+                    {name:"Input", className:"w-4/12", placeholder:"", data:"nombre",},
                     {name:"Select", className:"w-1/12",
                       values:{AN:"Antes", DU: "Durante", DE: "Después"}},
                     {name:"CustomDatePicker", className:"w-1/12"},
                     {name:"CustomDatePicker", className:"w-1/12"},
                     {name:"TextArea", multiLinea: false, className: "w-4/12", placeholder:"Tratamiento"}
-                  ]}/>
+                  ]},
+                    {cantidad:3, campos:[
+                        {name: "Input", className: "w-3/12", placeholder: "Nombre"},
+                        {name:"TextArea", multiLinea: false, className: "w-4/12", placeholder:"Observación"}
+                      ]}]}/>
               </div>
             </form>
           }

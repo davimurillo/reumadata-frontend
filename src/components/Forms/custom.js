@@ -28,12 +28,12 @@ export const CustomItem = function(props){
     fields.forEach((fieldsObj,index) => {
       for (let i = 0; i < fieldsObj.cantidad; i++) {
         const item = restItems[i];
-        result.push(
+        item && result.push(
           <div>
-            <div key={index} className={"flex my-1 "}>
+            <div className={"flex my-1 "}>
               {
                 item.custom &&
-                <div className={"inline-flex items-center w-1/12"}>
+                <div className={"my-2 w-1/12"}>
                   <button onClick={handleEliminar} className={"h-8 w-8 bg-red-400 rounded"}>
                     <FontAwesomeIcon icon={faTrashCan} inverse/>
                   </button>
@@ -41,30 +41,31 @@ export const CustomItem = function(props){
               }
               {fieldsObj.campos.map((field, idx) => {
                 return item.custom && field.name === "Check" ? null :
-                  getCampo({...field, value:field.data ? item[field.data] : ""})
+                  getCampo({...field, value: field.data ? item[field.data] : ""})
 
               })
               }
             </div>
             {fieldsObj.campos[fieldsObj.campos.length - 1].name === "TextArea" && fieldsObj.campos[fieldsObj.campos.length - 1].multiLinea &&
               <div>
-                <div className={"inline-flex items-center w-full "}>
-                  <textarea placeholder={fieldsObj.campos[fields.campos.length - 1].placeholder}
-                            className={"block text-sm leading-5 w-full py-2 px-3 " +
-                              "border-2 border- text-slate-500 rounded-lg shadow-sm " +
-                              "focus:outline-none focus:border-blue-500 "}/>
+                <div className={"my-2 w-full "}>
+                <textarea placeholder={fieldsObj.campos[fields.campos.length - 1].placeholder}
+                          className={"block align-top text-sm leading-5 w-full py-2 px-3 " +
+                            "border-2 border- text-slate-500 rounded-lg shadow-sm " +
+                            "focus:outline-none focus:border-blue-700 "}/>
                 </div>
               </div>
             }
           </div>
         )
       }
-      console.log(result);
       restItems.splice(0,fieldsObj.cantidad);
     })
     return result
 
   }
+
+
  console.log('ID ' + props.label + " : " + props.id);
   return (
     <div className={props.className ? "my-2 " + props.className : "my-2" }>

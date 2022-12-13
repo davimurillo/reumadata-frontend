@@ -7,6 +7,8 @@ import {NuevoPaciente} from "./scenes/Pacientes/NuevoPaciente";
 import {Atenciones} from "./scenes/Atenciones";
 import {MenuAtenciones} from "./scenes/Atenciones/MenuAtenciones";
 import {NuevoLupus} from "./scenes/Lupus/NuevaAtencionLupus";
+import {Enfermadades} from "./scenes/Enfermedades";
+import {Reportes} from "./scenes/Reportes";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
         <Route path="/atenciones/" element={<Atenciones/>}/>
         <Route path="/atenciones/nuevo/" element={<MenuAtenciones/>}/>
         <Route path="/atenciones/nuevo/lupus" element={<NuevoLupus/>}/>
+        <Route path="/enfermedades/" element={<Enfermadades/>}/>
+        <Route path="/reportes/" element={<Reportes/>}/>
       </Routes>
   );
 }

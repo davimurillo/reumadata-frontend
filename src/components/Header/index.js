@@ -4,17 +4,13 @@ const enfermera = require("../../assets/img/enfermera.png");
 import {style} from "typestyle";
 
 const styleHeader = style({
-  height: "10%"
+  height: "10%",
+  background: "transparent",
 })
 
 export function Header() {
   return (
-    <nav className={"flex items-center justify-between flex-wrap bg-[#065A82] p-2 " + styleHeader}>
-      <div className={"hidden lg:block 2xl:block "}>
-        <div className="flex items-center flex-no-shrink text-white mr-6">
-          <Nombre size={48}/>
-        </div>
-      </div>
+    <nav className={"flex items-center justify-between flex-wrap  p-2 " + styleHeader}>
       <div className="block lg:hidden">
         <button
           className="flex items-center px-3 py-2 border rounded text-teal-lighter border-teal-light hover:text-white hover:border-white">
@@ -25,9 +21,9 @@ export function Header() {
       </div>
       <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
         <div className="text-sm lg:flex-grow">
-          <div className={""}>
+          <div className="flex items-center justify-center flex-wrap">
             <input
-              className="focus:outline-none focus:bg-green-200 w-1/2 bg-white h-12 px-5 pr-10 rounded-full text-lg focus:outline-none"
+              className="focus:outline-none focus:bg-white w-1/2 bg-gray-200 h-12 px-5 pr-10 rounded-full text-lg focus:outline-none"
               placeholder={"Busqueda paciente"}
             />
           </div>
@@ -36,12 +32,6 @@ export function Header() {
         </div>
         <div>
           <img className={"max-h-12 m-auto"} src={enfermera.default}/>
-        </div>
-        <div>
-          <a href="#"
-             className="inline-block text-lg px-4 py-2 leading-none
-             text-white hover:border-transparent
-             hover:text-teal mt-4 lg:mt-0">Dr. Nombre Apellido</a>
         </div>
       </div>
     </nav>

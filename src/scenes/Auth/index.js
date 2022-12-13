@@ -9,7 +9,8 @@ import {style} from "typestyle";
 import {useSelector} from "react-redux";
 
 const styleBody = style({
-    height: "90%"
+    height: "100%",
+    fontFamily: "sans-serif"
 })
 
 
@@ -27,10 +28,10 @@ export default function RequireAuth({ children }) {
 
     return(
       <div className={"flex flex-col h-screen"}>
-        <Header/>
-        <div className={"flex flex-row " + styleBody}>
+        <div className={"bg-[#EBEEF6] flex flex-row " + styleBody}>
             <Menu/>
-            <div className={"bg-[#ADE8F4] w-full overflow-auto"}>
+            <div className={"bg-[#EBEEF6] w-full overflow-auto"}>
+                <Header/>
                 {children}
             </div>
         </div>

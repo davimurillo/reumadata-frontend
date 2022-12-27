@@ -19,19 +19,30 @@ export function NuevoPaciente(){
   const [familiares, setFamiliares] = useState([{nombre:"", custom:true}])
   const [inmunizaciones, setInmunizaciones] = useState(INMUNIZACIONES)
   const [ginecoObstetricos, setGinecoObstetricos] = useState([{nombre:""}])
-  const [metodosAnticonceptivos, setMetodosAnticonceptivos] = useState([])
+  const [metodosAnticonceptivos, setMetodosAnticonceptivos] = useState([{nombre:"", custom:true}])
   const [complicacionesGestacion, setComplicacionesGestacion] = useState(COMPLICACIONES_GESTACION)
   const [complicacionesParto, setComplicacionesParto] = useState(COMPLICACIONES_PARTO)
   const [habitos, setHabitos] = useState(HABITOS_TOXICOS)
   const [comorbilidades, setComorbilidad] = useState(COMORBILIDADES)
+  const [pacienteData, setPacienteData] = useState({})
   const state = useSelector(state => state.core);
 
 
   useEffect( () => {
-    console.log('TRATA')
     core.getUbigeos();
   }, [])
 
+  const onChange = (e) => {
+    console.log('e', e)
+    console.log('key', e.id)
+    console.log('value', e.value)
+    const data = pacienteData;
+    data[e.id] = e.value;
+    console.log('last data', data);
+    setPacienteData(data);
+  }
+
+  console.log("genero", pacienteData?.genero)
 
   const tabs = ['Filiación','Comorbilidad', 'Antecedentes',
     'Antecedentes gineco-obstetricos',
@@ -49,7 +60,7 @@ export function NuevoPaciente(){
         <ul className='mt-1 border-b-2 solid flex items-stretch cursor-pointer rounded'>
           {tabs.map((tab, index) => {
             return (
-            <li key={index} className={'flex py-2 px-6 rounded-t-lg bg-white items-center ' +
+            <li key={index} className={'mb-4 flex py-2 px-6 rounded-t-lg bg-white items-center ' +
               (activeTab === tab ? 'bg-white border-b-4 border-sky-600 ' : 'text-gray-500')}
                 onClick={()=> setActiveTab(tab)}
             >{tab}</li>
@@ -60,23 +71,20 @@ export function NuevoPaciente(){
           { activeTab === "Filiación" &&
             <form>
               <div className={"grid grid-cols-2 space-x-2"}>
-                <Input placeholder={"Juan Augusto"} label={"Nombres"} className={"ml-2"}/>
-                <Input placeholder={"Perez Lopez"} label={"Apellidos"}/>
-                <Select label={"Género"} values={{M: "Masculino", F: "Femenino"}}/>
-                <Input placeholder={"XXXXXXXX"}
-                       label={"Número de historia clínica"}/>
-                <Input placeholder={"XXXXXXXX"}
-                       label={"DNI"}
-                       validations={{type:"number"}}/>
-                <CustomDatePicker label={"Fecha de Nacimiento"}/>
-                <SelectPlace label={"Lugar de Nacimiento"} values={state.ubigeos}/>
-                <SelectPlace label={"Lugar de Procedencia"} values={state.ubigeos}/>
-                <Select label={"Etnia "} values={ETNIAS}/>
-                <Select label={"Grado de Instrucción "} values={GRADOS}/>
-                <Select label={"Estado Civil "} values={ESTADOS}/>
-                <Input label={"Ocupación"} placeholder={"Ocupación"}/>
-                <Input label={"Religión"} placeholder={"Religión"}/>
-                <Input placeholder={"Celular o fijo "} label={"Número de telefono"}/>
+                <Input id="nombres" placeholder={"Juan Augusto"} label={"Nombres"} className={"ml-2"} onChange={onChange}/>
+                <Input id="apellidos" placeholder={"Perez Lopez"} label={"Apellidos"} onChange={onChange}/>
+                <Select id="genero" label={"Género"} values={{M: "Masculino", F: "Femenino"}} onChange={onChange}/>
+                <Input id="numero_historia" placeholder={"XXXXXXXX"} label={"Número de historia clínica"} onChange={onChange}/>
+                <Input id="dni" placeholder={"XXXXXXXX"} label={"DNI"} validations={{type:"number"}} onChange={onChange}/>
+                <CustomDatePicker label={"Fecha de Nacimiento"} id={"fechaNacimiento"} onChange={onChange}/>
+                <SelectPlace id="lugar_nacimiento" label={"Lugar de Nacimiento"} values={state.ubigeos} onChange={onChange}/>
+                <SelectPlace id="lugar_procedencia" label={"Lugar de Procedencia"} values={state.ubigeos} onChange={onChange}/>
+                <Select id="etnia" label={"Etnia"} values={ETNIAS} onChange={onChange} />
+                <Select id="grado_instruccion" label={"Grado de Instrucción"} values={GRADOS} onChange={onChange}/>
+                <Select id="estado_civil" label={"Estado Civil"} values={ESTADOS} onChange={onChange}/>
+                <Input id="ocupacion" label={"Ocupación"} placeholder={"Ocupación"} onChange={onChange}/>
+                <Input id="religion" label={"Religión"} placeholder={"Religión"} onChange={onChange}/>
+                <Input id="numero_telefono" placeholder={"Celular o fijo "} label={"Número de telefono"} onChange={onChange}/>
               </div>
             </form>
           }
@@ -91,15 +99,16 @@ export function NuevoPaciente(){
                   agregar={setAlergias}
                   className={"ml-2"}
                   fields={[{cantidad:1, campos: [
-                      {name:"Input", className:"w-11/12", placeholder:"Agregar Medicamento" }]},
+                      {name:"Input", id: "medicamento",  className:"w-11/12", placeholder:"Agregar Medicamento" }]},
                     {cantidad:10, campos: [
-                      {name:"Input", className:"w-11/12", placeholder:"Agregar Medicamento" }]},
+                      {name:"Input", id: "medicamento", className:"w-11/12", placeholder:"Agregar Medicamento" }]},
                   ]}/>
                 <CustomItem
                   id={"autoinmunes"}
                   label={"Antecedentes de enfermedades autoinmunes en familiares"}
                   entradas={familiares}
                   agregar={setFamiliares}
+                  onChange={onChange}
                   fields={[
                     {cantidad:1, campos: [
                       {name:"Input", className:"w-11/12", placeholder:"Agregar enfermedad"}
@@ -113,18 +122,21 @@ export function NuevoPaciente(){
                   label={"Hábitos tóxicos"}
                   entradas={habitos}
                   agregar={setHabitos}
+                  onChange={onChange}
                   fields={[
                     {cantidad:3, campos: [
                       {name:"Check", className:"w-1/12"},
-                      {name:"Input", className:"w-8/12", data:"nombre", placeholder:"Agregar hábito"},
+                      {name:"label", className:"w-5/12", data:"nombre", placeholder:"Agregar hábito"},
                       {name:"Select", className:"w-3/12",
-                        values:{AN:"Antes", AC: "Actual"}}
+                        values:{AN:"Antes", AC: "Actual"}},
+                      {name:"CustomDatePicker", className:"w-4/12"},
                       ]},
                     {cantidad:10, campos: [
                         {name:"Check", className:"w-1/12"},
-                        {name:"Input", className:"w-8/12", placeholder:"Agregar hábito"},
+                        {name:"Input", className:"w-5/12", placeholder:"Agregar hábito"},
                         {name:"Select", className:"w-3/12",
-                          values:{AN:"Antes", AC: "Actual"}}
+                          values:{AN:"Antes", AC: "Actual"}},
+                        {name:"CustomDatePicker", className:"w-4/12"},
                       ]},
                   ]}/>
                 <CustomItem
@@ -132,10 +144,19 @@ export function NuevoPaciente(){
                   label={"Inmunizaciones"}
                   entradas={inmunizaciones}
                   agregar={setInmunizaciones}
-                  fields={[{name:"Check", className:"w-1/12"},
-                    {name:"Input", className:"w-7/12", placeholder:"Agregar inmunización"},
-                    {name:"CustomDatePicker", className:"w-3/12"},
-                    {name:"TextArea", multiLinea: true, className: "w-1/12"}
+                  onChange={onChange}
+                  fields={[
+                    {cantidad:8, campos: [
+                      {name:"Check", className:"w-1/12"},
+                      {name:"label", className:"w-4/12", data:"nombre", placeholder:"Agregar hábito"},
+                      {name:"CustomDatePicker", className:"w-3/12"},
+                      {name:"TextArea", multiLinea: false, className: "w-4/12", placeholder:"descripción inmunización"}
+                    ]},
+                    {cantidad:5, campos: [
+                      {name:"Input", className:"w-4/12", placeholder:"Agregar inmunización"},
+                      {name:"CustomDatePicker", className:"w-3/12"},
+                      {name:"TextArea", multiLinea: false, className: "w-4/12", placeholder:"descripción inmunización"}
+                    ]}
                   ]}/>
 
 
@@ -143,67 +164,105 @@ export function NuevoPaciente(){
             </form>
           }
           {
-            activeTab === "Antecedentes gineco-obstetricos" &&
+            activeTab === "Antecedentes gineco-obstetricos" && pacienteData?.genero == "F" &&
             <form>
-              <div className={"grid grid-cols-3 space-x-2"}>
-
-
-
-                <Input placeholder={"XXXXXXXX"}
-                       label={"Número de gestaciones"}
-                       className={"ml-2"}
-                       validations={{type:"number"}}/>
-                <Input placeholder={"XXXXXXXX"}
-                       label={"Número de abortos"}
-                       validations={{type:"number"}}/>
-                <Input placeholder={"XXXXXXXX"}
-                       label={"Número de partos pretérmino"}
-                       validations={{type:"number"}}/>
-                <Input placeholder={"XXXXXXXX"}
-                       label={"Número de gestaciones"}
-                       validations={{type:"number"}}/>
-                <Input placeholder={"XXXXXXXX"}
-                       label={"Número de abortos"}
-                       validations={{type:"number"}}/>
-                <Input placeholder={"XXXXXXXX"}
-                       label={"Número de partos pretérmino"}
-                       validations={{type:"number"}}/>
-                <CustomItem
-                  id={"gestacion"}
-                  label={"Complicaciones durante la gestación"}
-                  entradas={complicacionesGestacion}
-                  agregar={setComplicacionesGestacion}
-                  fields={[{name:"Check", className:"w-1/12"},
-                    {name:"Input", className:"w-11/12", placeholder:"Agregar complicación"},
-                  ]}/>
-                <CustomItem
-                  id={"parto"}
-                  label={"Complicaciones durante el parto"}
-                  entradas={complicacionesParto}
-                  agregar={setComplicacionesParto}
-                  fields={[{name:"Check", className:"w-1/12"},
-                    {name:"Input", className:"w-11/12", placeholder:"Agregar complicación"},
-                  ]}/>
-                <CustomItem
+              <div className={"grid grid-cols-2 space-x-2"}>
+                 <CustomItem
                   id={"amenorrea"}
                   label={"Amenorrea"}
                   entradas={ginecoObstetricos}
                   agregar={setGinecoObstetricos}
+                  onChange={onChange}
                   esUnico={true}
-                  fields={[
-                    {name:"Input", className:"w-8/12", placeholder:"Duración - tiempo"},
+                  fields={[{cantidad:1, campos: [
+                    {name:"Check", className:"w-1/12"},
+                    {name:"Input", className:"w-7/12", placeholder:"Duración - tiempo"},
                     {name:"Select", className:"w-4/12",
                       values:{DI:"Días", ME: "Meses", AN: "Años"}},
+                  ]}
                   ]}/>
                 <CustomItem
                   id={"anticonceptivos"}
                   label={"Método anticonceptivo"}
                   entradas={metodosAnticonceptivos}
                   agregar={setMetodosAnticonceptivos}
+                  onChange={onChange}
                   fields={[
-                    {name:"Input", className:"w-11/12", placeholder:"Agregar método anticonceptivo"},
+                    {cantidad:1, campos: [
+                      {name:"Input", className:"w-11/12", placeholder:"Agregar método anticonceptivo"}
+                    ]},
+                    {cantidad:10, campos: [
+                        {name:"Input", className:"w-11/12", placeholder:"Agregar método anticonceptivo"}
+                      ]},
                   ]}
                 />
+                <Input 
+                      id="numero_gestacion"
+                      placeholder={"XXXXXXXX"}
+                      label={"Número de gestaciones"}
+                      validations={{type:"number"}}
+                      onChange={onChange}/> 
+                <Input placeholder={"XXXXXXXX"}
+                      id="numero_aborto"
+                       label={"Número de abortos"}
+                       validations={{type:"number"}}
+                       onChange={onChange}/> 
+                <Input placeholder={"XXXXXXXX"}
+                      id="numero_partos_preterminos"
+                       label={"Número de partos pretérminos"}
+                       validations={{type:"number"}}
+                       onChange={onChange}/> 
+                <Input placeholder={"XXXXXXXX"}
+                      id="numero_partos_terminos"
+                       label={"Número de Partos a términos"}
+                       validations={{type:"number"}}
+                       onChange={onChange}/> 
+                <Input placeholder={"XXXXXXXX"}
+                      id="numero_obitos"
+                       label={"Número de Óbitos"}
+                       validations={{type:"number"}}
+                       onChange={onChange}/> 
+                <Input placeholder={"XXXXXXXX"}
+                      id="numero_natimuertos"
+                       label={"Número de Natimuertos"}
+                       validations={{type:"number"}}
+                       onChange={onChange}/> 
+
+                <CustomItem
+                  id={"gestacion"}
+                  label={"Complicaciones durante la gestación"}
+                  entradas={complicacionesGestacion}
+                  agregar={setComplicacionesGestacion}
+                  onChange={onChange}
+                  fields={[
+                    {cantidad:8, campos: [
+                      {name:"Check", className:"w-1/12"},
+                      {name:"label", className:"w-11/12", data:"nombre"},
+                      ]},
+                    {cantidad:10, campos: [
+                        {name:"Check", className:"w-1/12"},
+                        {name:"Input", className:"w-11/12", placeholder:"Agregar complicación"}
+                    ]}
+                  ]}/>
+                <CustomItem
+                  id={"parto"}
+                  label={"Complicaciones durante el parto"}
+                  entradas={complicacionesParto}
+                  agregar={setComplicacionesParto}
+                  onChange={onChange}
+                  fields={
+                    [
+                      {cantidad:5, campos: [
+                        {name:"Check", className:"w-1/12"},
+                        {name:"label", className:"w-11/12", data:"nombre"},
+                        ]},
+                      {cantidad:10, campos: [
+                          {name:"Check", className:"w-1/12"},
+                          {name:"Input", className:"w-11/12", placeholder:"Agregar complicación"}
+                      ]}
+                    ]
+                  }/>
+                
 
               </div>
             </form>
@@ -217,9 +276,10 @@ export function NuevoPaciente(){
                   label={"Comorbilidades"}
                   entradas={comorbilidades}
                   agregar={setComorbilidad}
+                  onChange={onChange}
                   fields={[{cantidad:10, campos: [
                     {name:"Check", className:"w-1/12"},
-                    {name:"Input", className:"w-4/12", placeholder:"", data:"nombre",},
+                    {name:"label", className:"w-4/12", placeholder:"", data:"nombre",},
                     {name:"Select", className:"w-1/12",
                       values:{AN:"Antes", DU: "Durante", DE: "Después"}},
                     {name:"CustomDatePicker", className:"w-1/12"},

@@ -77,11 +77,12 @@ export const Input = extField(function(props){
   console.log(props);
   const type = validations && validations.type ? validations.type : "text"
   return (
-      <input className={"block text-sm leading-5 w-full py-2 px-3 " +
+      <input id={props.id} className={"block text-sm leading-5 w-full py-2 px-3 " +
         "border-2 border- text-slate-500 rounded-lg shadow-sm " +
         "focus:outline-none focus:border-blue-500 " }
         placeholder={props.placeholder} value={props.value}
         type = {type}
+        onChange = {(e) => props.onChange(e.target) }
       />
   )
 })
@@ -89,9 +90,9 @@ export const Input = extField(function(props){
 export const Select = extField(function(props){
   let value = props.label || "Selección"
   return(
-    <select defaultValue={value} className={"block text-sm leading-5 w-full py-2 px-3 " +
+    <select id={props.id} defaultValue={value} className={"block text-sm leading-5 w-full py-2 px-3 " +
       "border-2 border- text-slate-500 rounded-lg shadow-sm " +
-      "focus:outline-none focus:border-blue-500"}>
+      "focus:outline-none focus:border-blue-500"} onChange={(e) => props.onChange(e.target)}>
       <option disabled>{value}</option>
       {Object.keys(props.values).map((key)=>{
         return <option key={key} value={key} className="">{props.values[key]}</option>
@@ -104,12 +105,14 @@ export const CustomDatePicker = extField(function (props){
   const [startDate, setStartDate] = useState(new Date());
 
   return(
-      <DatePicker selected={startDate}
-
+      <DatePicker id={props.id} selected={startDate}
                   className={"block text-sm leading-5 w-full py-2 px-3 " +
                     "border-2 border- text-slate-500 rounded-lg shadow-sm " +
                     "focus:outline-none focus:border-blue-500 " }
-                  onChange={(date) => setStartDate(date)}/>
+                  onChange={(date) => {
+                    setStartDate(date)
+                    props.onChange({id: props.id, value: date.toISOString()})
+                  }}/>
   )
 })
 
@@ -120,32 +123,34 @@ export const SelectPlace = extField(function(props){
 
   const changePais = (event) =>{
     setPais(event.target.value);
+    props.onChange(event.target)
   }
 
   const changeDep =  (event) =>{
     const department = props.values.find(obj => obj['name']  === event.target.value)
     setProvinces(department['provinces'])
+    props.onChange(event.target)
   }
 
   const changePro =  (event) =>{
     const province = provinces.find(obj => obj['name']  === event.target.value)
     setDistricts(province['districts'])
+    props.onChange(event.target)
   }
 
 
   return(
     <div className={"grid grid-cols-2 "}>
-      <select defaultValue={"Selecciona el país"} placeholder={"País"} onChange={changePais}  className={"block text-sm leading-5 py-2 px-3 " +
+      <select id={props.id} defaultValue={"Selecciona el país"} placeholder={"País"} onChange={changePais}  className={"block text-sm leading-5 py-2 px-3 " +
         "border-2 border- text-slate-500 rounded-lg shadow-sm " +
         "focus:outline-none focus:border-blue-500"}>
         <option disabled>Selecciona el país</option>
         <option key={'PE'} value={'PE'} className="">Peruano</option>
         <option key={'EX'} value={'EX'} className="">Extranjero</option>
-        })}
       </select>
       { pais === "PE" &&
       <>
-      <select placeholder={"País"} onChange={changeDep} className={"block text-sm leading-5py-2 px-3 " +
+      <select id={props.id} placeholder={"País"} onChange={changeDep} className={"block text-sm leading-5py-2 px-3 " +
         "border-2 border- text-slate-500 rounded-lg shadow-sm " +
         "focus:outline-none focus:border-blue-500"}>
         <option disabled selected>Selecciona el departamento</option>
@@ -156,7 +161,7 @@ export const SelectPlace = extField(function(props){
             className="">{item['name']}</option>
         })}
       </select>
-      <select onChange={changePro} className={"block text-sm leading-5 py-2 px-3 " +
+      <select id="provincia" onChange={changePro} className={"block text-sm leading-5 py-2 px-3 " +
         "border-2 border- text-slate-500 rounded-lg shadow-sm " +
         "focus:outline-none focus:border-blue-500"}>
         <option disabled selected>Selecciona la provincia</option>
@@ -164,7 +169,7 @@ export const SelectPlace = extField(function(props){
           return <option key={key} value={item['name']} className="">{item['name']}</option>
         })}
       </select>
-      <select className={"block text-sm leading-5 py-2 px-3 " +
+      <select id="distrito" className={"block text-sm leading-5 py-2 px-3 " +
         "border-2 border- text-slate-500 rounded-lg shadow-sm " +
         "focus:outline-none focus:border-blue-500"}>
         <option disabled selected>Selecciona el distrito</option>
@@ -258,13 +263,13 @@ export const TextArea = function (props){
       <textarea />
     </div>
   )
+
   const addObs = (e) => {
     e.preventDefault();
-
-
     setAreView(true)
     console.log("FINAL:", e.target.parentNode);
   }
+
   return props.multiLinea ?
     <div className={"inline-flex items-center w-1/12 pl-0.5"}>
       <button onClick={addObs} className={"h-8 w-8 bg-amber-500 rounded items-center"}>
@@ -279,4 +284,7 @@ export const TextArea = function (props){
     </div>
 }
 
+export const label = function (props){
+  return <label className={"inline-flex items-center " + props.className}>{props.value}</label>
+}
 

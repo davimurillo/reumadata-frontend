@@ -15,7 +15,17 @@ export const CustomItem = function(props){
     nuevaLista.pop(index)
     props.agregar(nuevaLista)
   }
+
+  const onChange = (e) => {
+    const object = {};
+    object[props.id]=[];
+    object[props.id].push({id: e.id, value: e.value})
+
+    console.log(object)
+  }
+
   const getCampo = (field) => {
+    console.log(field)
     const CustomComponent = componentes[field.name];
     return (
       <CustomComponent {...field} />
@@ -29,7 +39,7 @@ export const CustomItem = function(props){
       for (let i = 0; i < fieldsObj.cantidad; i++) {
         const item = restItems[i];
         item && result.push(
-          <div>
+          <div key={index + Math.random()}>
             <div className={"flex my-1 "}>
               {
                 item.custom &&
@@ -41,15 +51,16 @@ export const CustomItem = function(props){
               }
               {fieldsObj.campos.map((field, idx) => {
                 return item.custom && field.name === "Check" ? null :
-                  getCampo({...field, value: field.data ? item[field.data] : ""})
+                  getCampo({...field, value: field.data ? item[field.data] : "", onChange: onChange })
 
               })
               }
             </div>
+            
             {fieldsObj.campos[fieldsObj.campos.length - 1].name === "TextArea" && fieldsObj.campos[fieldsObj.campos.length - 1].multiLinea &&
               <div>
                 <div className={"my-2 w-full "}>
-                <textarea placeholder={fieldsObj.campos[fields.campos.length - 1].placeholder}
+                <textarea 
                           className={"block align-top text-sm leading-5 w-full py-2 px-3 " +
                             "border-2 border- text-slate-500 rounded-lg shadow-sm " +
                             "focus:outline-none focus:border-blue-700 "}/>

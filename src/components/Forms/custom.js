@@ -51,7 +51,7 @@ export const CustomItem = function(props){
               }
               {fieldsObj.campos.map((field, idx) => {
                 return item.custom && field.name === "Check" ? null :
-                  getCampo({...field, value: field.data ? item[field.data] : "", onChange: onChange })
+                  getCampo({...field, value: field.data ? item[field.data] : "", onChange: onChange, id: props.id + "_" + idx })
 
               })
               }

@@ -73,16 +73,20 @@ export const Check = function (props){
 }
 
 export const Input = extField(function(props){
+  const [value, setValue] = useState(props.value);
   const validations = props.validations
-  console.log(props);
   const type = validations && validations.type ? validations.type : "text"
   return (
       <input id={props.id} className={"block text-sm leading-5 w-full py-2 px-3 " +
         "border-2 border- text-slate-500 rounded-lg shadow-sm " +
         "focus:outline-none focus:border-blue-500 " }
-        placeholder={props.placeholder} value={props.value}
+        placeholder={props.placeholder} value={value}
         type = {type}
-        onChange = {(e) => props.onChange(e.target) }
+        onChange = {(e) => {
+          console.log("input custom", e.target.value)
+          setValue(e.target.value)
+          props.onChange(e.target) 
+         } }
       />
   )
 })

@@ -45,9 +45,6 @@ export function NuevoPaciente(){
     }
   }
 
-  console.log("genero", pacienteData?.genero)
-
-
   
  
   return (

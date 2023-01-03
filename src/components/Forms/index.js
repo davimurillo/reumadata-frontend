@@ -138,6 +138,10 @@ export const SelectPlace = extField(function(props){
     props.onChange(event.target)
   }
 
+  const changeDistrict =  (event) =>{
+    props.onChange(event.target)
+  }
+
 
   return(
     <div className={"grid grid-cols-2 "}>
@@ -150,7 +154,7 @@ export const SelectPlace = extField(function(props){
       </select>
       { pais === "PE" &&
       <>
-      <select id={props.id} placeholder={"País"} onChange={changeDep} className={"block text-sm leading-5py-2 px-3 " +
+      <select id={props.id + "_departamento"} placeholder={"País"} onChange={changeDep} className={"block text-sm leading-5py-2 px-3 " +
         "border-2 border- text-slate-500 rounded-lg shadow-sm " +
         "focus:outline-none focus:border-blue-500"}>
         <option disabled selected>Selecciona el departamento</option>
@@ -161,7 +165,7 @@ export const SelectPlace = extField(function(props){
             className="">{item['name']}</option>
         })}
       </select>
-      <select id="provincia" onChange={changePro} className={"block text-sm leading-5 py-2 px-3 " +
+      <select id={props.id + "_provincia"} onChange={changePro} className={"block text-sm leading-5 py-2 px-3 " +
         "border-2 border- text-slate-500 rounded-lg shadow-sm " +
         "focus:outline-none focus:border-blue-500"}>
         <option disabled selected>Selecciona la provincia</option>
@@ -169,9 +173,9 @@ export const SelectPlace = extField(function(props){
           return <option key={key} value={item['name']} className="">{item['name']}</option>
         })}
       </select>
-      <select id="distrito" className={"block text-sm leading-5 py-2 px-3 " +
+      <select id={props.id + "_distrito"} className={"block text-sm leading-5 py-2 px-3 " +
         "border-2 border- text-slate-500 rounded-lg shadow-sm " +
-        "focus:outline-none focus:border-blue-500"}>
+        "focus:outline-none focus:border-blue-500"} onChange={changeDistrict}>
         <option disabled selected>Selecciona el distrito</option>
         {districts.map((item, key)=>{
           return <option key={key} value={item['id']} className="">{item['name']}</option>

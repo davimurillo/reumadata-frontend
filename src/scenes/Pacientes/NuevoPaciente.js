@@ -25,6 +25,7 @@ export function NuevoPaciente(){
   const [habitos, setHabitos] = useState(HABITOS_TOXICOS)
   const [comorbilidades, setComorbilidad] = useState(COMORBILIDADES)
   const [pacienteData, setPacienteData] = useState({})
+  const [tabs, setTabs] = useState(['Filiación','Comorbilidad','Antecedentes'])
   const state = useSelector(state => state.core);
 
 
@@ -33,20 +34,22 @@ export function NuevoPaciente(){
   }, [])
 
   const onChange = (e) => {
-    console.log('e', e)
-    console.log('key', e.id)
-    console.log('value', e.value)
     const data = pacienteData;
     data[e.id] = e.value;
     console.log('last data', data);
     setPacienteData(data);
+    if (e.id == "genero" && e.value == "F"){
+      setTabs(['Filiación','Comorbilidad','Antecedentes','Antecedentes gineco-obstetricos'])
+    } else {
+      setTabs(['Filiación','Comorbilidad','Antecedentes'])
+    }
   }
 
   console.log("genero", pacienteData?.genero)
 
-  const tabs = ['Filiación','Comorbilidad', 'Antecedentes',
-    'Antecedentes gineco-obstetricos',
-  ]
+
+  
+ 
   return (
     <RequireAuth>
       <div className={"bg-white m-8 p-8 "}>

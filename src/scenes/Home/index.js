@@ -5,7 +5,7 @@ class Home extends Component{
   render(){
     return(
       <RequireAuth>
-        <h1>HOME</h1>
+        
       </RequireAuth>
     )
   }

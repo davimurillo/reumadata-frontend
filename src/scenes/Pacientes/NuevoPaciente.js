@@ -12,11 +12,29 @@ import {INMUNIZACIONES, COMPLICACIONES_PARTO, HABITOS_TOXICOS} from "./constants
 import {GINECO_OBSTETRICOS} from "./constants";
 import {ETNIAS, GRADOS, ESTADOS} from "./constants";
 
+const filiation = {
+  date_birth: "",
+  degree: "",
+  dni: "",
+  ethnicity: "",
+  first_name: "",
+  gender: "",
+  last_name: "",
+  marital_status: "",
+  medical_history_number: "",
+  occupation: "",
+  place_birth: {},
+  place_origin: {},
+  religion: "",
+  phone_number: {}
+}
+
 export function NuevoPaciente(){
 
   const [activeTab, setActiveTab] = useState('Filiación');
   const [alergias, setAlergias] = useState([{nombre:"", custom:true}])
   const [familiares, setFamiliares] = useState([{nombre:"", custom:true}])
+  const [phoneNumber, setPhoneNumber] = useState([{phone:"", custom:true}])
   const [inmunizaciones, setInmunizaciones] = useState(INMUNIZACIONES)
   const [ginecoObstetricos, setGinecoObstetricos] = useState([{nombre:""}])
   const [metodosAnticonceptivos, setMetodosAnticonceptivos] = useState([{nombre:"", custom:true}])
@@ -24,7 +42,7 @@ export function NuevoPaciente(){
   const [complicacionesParto, setComplicacionesParto] = useState(COMPLICACIONES_PARTO)
   const [habitos, setHabitos] = useState(HABITOS_TOXICOS)
   const [comorbilidades, setComorbilidad] = useState(COMORBILIDADES)
-  const [pacienteData, setPacienteData] = useState({})
+  const [pacienteData, setPacienteData] = useState({filiation})
   const [tabs, setTabs] = useState(['Filiación','Comorbilidad','Antecedentes'])
   const state = useSelector(state => state.core);
 
@@ -33,16 +51,46 @@ export function NuevoPaciente(){
     core.getUbigeos();
   }, [])
 
+  const onChangeCustomItem = (e) => {
+    const id = Object.keys(e)[0];
+    const value = e[id];
+    console.log({id, value})
+    onChange({id, value});
+  }
+
   const onChange = (e) => {
-    const data = pacienteData;
-    data[e.id] = e.value;
+    const data = pacienteData; 
+
+    if (e.id == "place_birth"){
+        data.filiation.place_birth["country"] = e.value
+        return setPacienteData(data);
+    } 
+    
+    if (e.id == "place_birth_distrito") {
+        data.filiation.place_birth["district"] = e.value
+        return setPacienteData(data);
+    } 
+
+    if (e.id == "place_origin"){
+      data.filiation.place_origin["country"] = e.value
+      return setPacienteData(data);
+    } 
+  
+    if (e.id == "place_origin_distrito") {
+        data.filiation.place_origin["district"] = e.value
+        return setPacienteData(data);
+    } 
+    
+    data.filiation[e.id] = e.value;
     console.log('last data', data);
     setPacienteData(data);
+
     if (e.id == "genero" && e.value == "F"){
       setTabs(['Filiación','Comorbilidad','Antecedentes','Antecedentes gineco-obstetricos'])
     } else {
       setTabs(['Filiación','Comorbilidad','Antecedentes'])
     }
+
   }
 
   
@@ -71,20 +119,35 @@ export function NuevoPaciente(){
           { activeTab === "Filiación" &&
             <form>
               <div className={"grid grid-cols-2 space-x-2"}>
-                <Input id="nombres" placeholder={"Juan Augusto"} label={"Nombres"} className={"ml-2"} onChange={onChange}/>
-                <Input id="apellidos" placeholder={"Perez Lopez"} label={"Apellidos"} onChange={onChange}/>
-                <Select id="genero" label={"Género"} values={{M: "Masculino", F: "Femenino"}} onChange={onChange}/>
-                <Input id="numero_historia" placeholder={"XXXXXXXX"} label={"Número de historia clínica"} onChange={onChange}/>
+                <Input id="first_name" placeholder={"Juan Augusto"} label={"Nombres"} className={"ml-2"} onChange={onChange}/>
+                <Input id="last_name" placeholder={"Perez Lopez"} label={"Apellidos"} onChange={onChange}/>
+                <Select id="gender" label={"Género"} values={{M: "Masculino", F: "Femenino"}} onChange={onChange}/>
+                <Input id="medical_history_number" placeholder={"XXXXXXXX"} label={"Número de historia clínica"} onChange={onChange}/>
                 <Input id="dni" placeholder={"XXXXXXXX"} label={"DNI"} validations={{type:"number"}} onChange={onChange}/>
-                <CustomDatePicker label={"Fecha de Nacimiento"} id={"fechaNacimiento"} onChange={onChange}/>
-                <SelectPlace id="lugar_nacimiento" label={"Lugar de Nacimiento"} values={state.ubigeos} onChange={onChange}/>
-                <SelectPlace id="lugar_procedencia" label={"Lugar de Procedencia"} values={state.ubigeos} onChange={onChange}/>
-                <Select id="etnia" label={"Etnia"} values={ETNIAS} onChange={onChange} />
-                <Select id="grado_instruccion" label={"Grado de Instrucción"} values={GRADOS} onChange={onChange}/>
-                <Select id="estado_civil" label={"Estado Civil"} values={ESTADOS} onChange={onChange}/>
-                <Input id="ocupacion" label={"Ocupación"} placeholder={"Ocupación"} onChange={onChange}/>
+                <CustomDatePicker id="date_birth" label={"Fecha de Nacimiento"}  onChange={onChange}/>
+                <SelectPlace id="place_birth" label={"Lugar de Nacimiento"} values={state.ubigeos} onChange={onChange}/>
+                <SelectPlace id="place_origin" label={"Lugar de Procedencia"} values={state.ubigeos} onChange={onChange}/>
+                <Select id="ethnicity" label={"Etnia"} values={ETNIAS} onChange={onChange} />
+                <Select id="degree" label={"Grado de Instrucción"} values={GRADOS} onChange={onChange}/>
+                <Select id="marital_status" label={"Estado Civil"} values={ESTADOS} onChange={onChange}/>
+                <Input id="occupation" label={"Ocupación"} placeholder={"Ocupación"} onChange={onChange}/>
                 <Input id="religion" label={"Religión"} placeholder={"Religión"} onChange={onChange}/>
-                <Input id="numero_telefono" placeholder={"Celular o fijo "} label={"Número de telefono"} onChange={onChange}/>
+                <CustomItem
+                  id="phone_number"
+                  label={"Numeros de teléfono(s)"}
+                  entradas={phoneNumber}
+                  agregar={setPhoneNumber}
+                  onChange={onChangeCustomItem}
+                  fields={[
+                    {cantidad:1, campos: [
+                      {name:"Select", id:"type", className:"w-3/12", values:{Fijo:"Fijo", Celular: "Celular"}},
+                      {name:"Input", id:"number", type:"number", className:"w-9/12", placeholder:"Agregar Telefono"}
+                    ]},
+                    {cantidad:10, campos: [
+                      {name:"Select",  id:"type", className:"w-3/12", values:{Fijo:"Fijo", Celular: "Celular"}},
+                      {name:"Input", id:"number", type:"number", className:"w-9/12", placeholder:"Agregar Telefono"}
+                      ]},
+                  ]}/>
               </div>
             </form>
           }

@@ -133,13 +133,13 @@ export const SelectPlace = extField(function(props){
   const changeDep =  (event) =>{
     const department = props.values.find(obj => obj['name']  === event.target.value)
     setProvinces(department['provinces'])
-    props.onChange(event.target)
+    //props.onChange(event.target)
   }
 
   const changePro =  (event) =>{
     const province = provinces.find(obj => obj['name']  === event.target.value)
     setDistricts(province['districts'])
-    props.onChange(event.target)
+    //props.onChange(event.target)
   }
 
   const changeDistrict =  (event) =>{

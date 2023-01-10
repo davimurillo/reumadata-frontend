@@ -4,6 +4,9 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCirclePlus, faTrashCan} from "@fortawesome/free-solid-svg-icons";
 
 export const CustomItem = function(props){
+
+  const [item, setItem] = useState([]);
+  const [itemField, setItemField] = useState({ [props.id]:{} });
   const {entradas, fields} = props;
   const handleAgregar = (e) => {
     e.preventDefault();
@@ -16,12 +19,20 @@ export const CustomItem = function(props){
     props.agregar(nuevaLista)
   }
 
-  const onChange = (e) => {
-    const object = {};
-    object[props.id]=[];
-    object[props.id].push({id: e.id, value: e.value})
+  const onChangeField = (e, index) => {
+    const itemData = item;
 
-    console.log(object)
+    if (!itemData[index]) {
+      itemData.push({[e.id]: e.value});
+    }else{
+      itemData[index][e.id]=e.value;
+    }
+    setItem(itemData);
+
+    const groupItem = itemField;
+    groupItem[props.id] = item;
+
+    props.onChange(groupItem)
   }
 
   const getCampo = (field) => {
@@ -51,7 +62,12 @@ export const CustomItem = function(props){
               }
               {fieldsObj.campos.map((field, idx) => {
                 return item.custom && field.name === "Check" ? null :
-                  getCampo({...field, value: field.data ? item[field.data] : "", onChange: onChange, id: props.id + "_" + idx })
+                  getCampo({
+                    ...field, 
+                    value: field.data ? item[field.data] : "", 
+                    onChange: (e) => onChangeField(e,index), 
+                    id: field.id
+                  })
 
               })
               }

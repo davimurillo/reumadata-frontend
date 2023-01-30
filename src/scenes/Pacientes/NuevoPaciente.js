@@ -34,7 +34,7 @@ export function NuevoPaciente(){
   const [activeTab, setActiveTab] = useState('Filiación');
   const [alergias, setAlergias] = useState([{nombre:"", custom:true}])
   const [familiares, setFamiliares] = useState([{nombre:"", custom:true}])
-  const [phoneNumber, setPhoneNumber] = useState([{phone:"", custom:true}])
+  const [phoneNumber, setPhoneNumber] = useState([{type: "", number:"", custom:true}])
   const [inmunizaciones, setInmunizaciones] = useState(INMUNIZACIONES)
   const [ginecoObstetricos, setGinecoObstetricos] = useState([{nombre:""}])
   const [metodosAnticonceptivos, setMetodosAnticonceptivos] = useState([{nombre:"", custom:true}])
@@ -50,6 +50,26 @@ export function NuevoPaciente(){
   useEffect( () => {
     core.getUbigeos();
   }, [])
+
+  const saveData = () => {
+    //const form = document.getElementById('formData');
+    console.log(pacienteData);
+    const validate = Object.keys(pacienteData.filiation).filter(e => {
+        if (typeof(pacienteData.filiation[e]) == "object") {
+          return  Object.keys(pacienteData.filiation[e]).length == 0
+        }else{
+          return pacienteData.filiation[e].length == 0
+        }
+      }
+    )
+    if (validate.length > 0){
+      alert("Revise los datos del paciente, faltan datos por completar")
+      return
+    }
+
+    core.savePatientData(pacienteData.filiation)
+
+  }
 
   const onChangeCustomItem = (e) => {
     const id = Object.keys(e)[0];
@@ -100,10 +120,10 @@ export function NuevoPaciente(){
       <div className={"bg-white m-8 p-8 "}>
         <div className={"flex items-center justify-between flex-wrap"}>
           <Titulo titulo={"NUEVO PACIENTE"}/>
-          <Link className={"rounded p-2 text-lg text-white bg-[#52b788]"}
-                to='/pacientes/'>
+          <button type="submit" className={"rounded p-2 text-lg text-white bg-[#52b788]"}
+                onClick={saveData}>
             GUARDAR Y SALIR
-          </Link>
+          </button>
         </div>
         <ul className='mt-1 border-b-2 solid flex items-stretch cursor-pointer rounded'>
           {tabs.map((tab, index) => {
@@ -117,24 +137,25 @@ export function NuevoPaciente(){
         </ul>
         <div>
           { activeTab === "Filiación" &&
-            <form>
+            <form id="formData">
               <div className={"grid grid-cols-2 space-x-2"}>
                 <Input id="first_name" placeholder={"Juan Augusto"} label={"Nombres"} className={"ml-2"} onChange={onChange}/>
                 <Input id="last_name" placeholder={"Perez Lopez"} label={"Apellidos"} onChange={onChange}/>
-                <Select id="gender" label={"Género"} values={{M: "Masculino", F: "Femenino"}} onChange={onChange}/>
+                <Select id="gender" value={pacienteData.filiation.gender} label={"Género"} values={{M: "Masculino", F: "Femenino"}} onChange={onChange}/>
                 <Input id="medical_history_number" placeholder={"XXXXXXXX"} label={"Número de historia clínica"} onChange={onChange}/>
                 <Input id="dni" placeholder={"XXXXXXXX"} label={"DNI"} validations={{type:"number"}} onChange={onChange}/>
                 <CustomDatePicker id="date_birth" label={"Fecha de Nacimiento"}  onChange={onChange}/>
                 <SelectPlace id="place_birth" label={"Lugar de Nacimiento"} values={state.ubigeos} onChange={onChange}/>
                 <SelectPlace id="place_origin" label={"Lugar de Procedencia"} values={state.ubigeos} onChange={onChange}/>
-                <Select id="ethnicity" label={"Etnia"} values={ETNIAS} onChange={onChange} />
-                <Select id="degree" label={"Grado de Instrucción"} values={GRADOS} onChange={onChange}/>
-                <Select id="marital_status" label={"Estado Civil"} values={ESTADOS} onChange={onChange}/>
+                <Select id="ethnicity" value={pacienteData.filiation.ethnicity} label={"Etnia"} values={ETNIAS} onChange={onChange} />
+                <Select id="degree" value={pacienteData.filiation.degree} label={"Grado de Instrucción"} values={GRADOS} onChange={onChange}/>
+                <Select id="marital_status" value={pacienteData.filiation.marital_status} label={"Estado Civil"} values={ESTADOS} onChange={onChange}/>
                 <Input id="occupation" label={"Ocupación"} placeholder={"Ocupación"} onChange={onChange}/>
                 <Input id="religion" label={"Religión"} placeholder={"Religión"} onChange={onChange}/>
                 <CustomItem
                   id="phone_number"
                   label={"Numeros de teléfono(s)"}
+                  templateData={{"type": "", "number":"", custom:true}}
                   entradas={phoneNumber}
                   agregar={setPhoneNumber}
                   onChange={onChangeCustomItem}
@@ -142,11 +163,7 @@ export function NuevoPaciente(){
                     {cantidad:1, campos: [
                       {name:"Select", id:"type", className:"w-3/12", values:{Fijo:"Fijo", Celular: "Celular"}},
                       {name:"Input", id:"number", type:"number", className:"w-9/12", placeholder:"Agregar Telefono"}
-                    ]},
-                    {cantidad:10, campos: [
-                      {name:"Select",  id:"type", className:"w-3/12", values:{Fijo:"Fijo", Celular: "Celular"}},
-                      {name:"Input", id:"number", type:"number", className:"w-9/12", placeholder:"Agregar Telefono"}
-                      ]},
+                    ]}
                   ]}/>
               </div>
             </form>

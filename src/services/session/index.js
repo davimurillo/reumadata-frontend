@@ -2,10 +2,10 @@ import * as api from './api';
 import {setAuth} from "./slice";
 import store from '../../store'
 
-const onRequestSuccess = response => {
+const onRequestSuccess =   (response) => {
   if(!response || !response.ok)
     return;
-  return response.json()
+    return response.json()
     .then(function (data) {
       if (!data.error) {
         store.dispatch(setAuth(data))
@@ -27,6 +27,6 @@ const onRequestFailed = (exception) => {
 export const authenticate = (username, password) =>
   api.authenticate(username, password)
     .then(resp => {
-      onRequestSuccess(resp);
+      return onRequestSuccess(resp);
     })
     .catch(onRequestFailed);

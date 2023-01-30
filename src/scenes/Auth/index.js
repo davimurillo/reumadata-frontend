@@ -18,7 +18,7 @@ export default function RequireAuth({ children }) {
     const state = useSelector(state => state.user)
     let location = useLocation();
 
-    if (state.tokens) {
+    if (!state.tokens) {
         // Redirect them to the /login page, but save the current location they were
         // trying to go to when they were redirected. This allows us to send them
         // along to that page after they login, which is a nicer user experience

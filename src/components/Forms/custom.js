@@ -10,7 +10,7 @@ export const CustomItem = function(props){
   const {entradas, fields} = props;
   const handleAgregar = (e) => {
     e.preventDefault();
-    props.agregar([...entradas, {nombre:"", custom:true}])
+    props.agregar([...entradas, props.templateData])
   }
   const handleEliminar = (e, index) => {
     e.preventDefault();
@@ -28,9 +28,16 @@ export const CustomItem = function(props){
       itemData[index][e.id]=e.value;
     }
     setItem(itemData);
+   
+    const dataEntry = props.entradas
+
+    dataEntry[index][e.id] = e.value
+
+    props.agregar(dataEntry)
 
     const groupItem = itemField;
-    groupItem[props.id] = item;
+
+    groupItem[props.id] = dataEntry;
 
     props.onChange(groupItem)
   }
@@ -45,9 +52,9 @@ export const CustomItem = function(props){
   const renderFields = () => {
     let restItems = [...entradas];
     let result = []
-    console.log(restItems);
+    //console.log(restItems);
     fields.forEach((fieldsObj,index) => {
-      for (let i = 0; i < fieldsObj.cantidad; i++) {
+      for (let i = 0; i < restItems.length; i++) {
         const item = restItems[i];
         item && result.push(
           <div key={index + Math.random()}>
@@ -64,8 +71,9 @@ export const CustomItem = function(props){
                 return item.custom && field.name === "Check" ? null :
                   getCampo({
                     ...field, 
-                    value: field.data ? item[field.data] : "", 
-                    onChange: (e) => onChangeField(e,index), 
+                    value: field.id ? item[field.id] : "", 
+                    key: idx + index + "input",
+                    onChange: (e) => onChangeField(e,i), 
                     id: field.id
                   })
 

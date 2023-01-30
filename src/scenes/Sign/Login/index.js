@@ -82,18 +82,20 @@ export default function Login(){
   const [loginData, setLoginData] = useState({username: "", password: ""})
   const [error, setError] = useState(false)
 
+  const _navigateScreen = (url) => {
+      navigate(url);
+  }
+
   function _login(event){
     if (loginData.username.length > 0 && loginData.password.length > 0)
-      navigate('/')
-      /*session.authenticate(loginData.username,loginData.password).then(response => {
+      //navigate('/')
+      session.authenticate(loginData.username,loginData.password).then(response => {
         console.log("reponse",response);
-          navigate('/')
-      })*/
+          _navigateScreen('/')
+      })
     else 
       setError(true)
   }
-
- console.log(loginData)
 
   return (
       <div className={"w-full bg-cover bg-center "+cuerpo} >

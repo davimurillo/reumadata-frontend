@@ -1,15 +1,20 @@
 import * as api from './api';
-import {setUbigeos} from "./slice";
+import {setUbigeos, setPatients} from "./slice";
 import store from '../../store'
 
 
-const onRequestSuccess = response => {
+const onRequestSuccess = (response, trigger) => {
   if(!response || !response.ok)
     return;
   return response.json()
     .then(function (data) {
       if (!data.error) {
-        store.dispatch(setUbigeos(data))
+        if (trigger == "ubigeos"){
+          store.dispatch(setUbigeos(data))
+        }
+        if (trigger == "patients"){
+          store.dispatch(setPatients(data))
+        }
         // usersData.me().then( resp =>
         //   store.dispatch(actionCreators.update({user: resp.user}))
         // )
@@ -27,7 +32,23 @@ const onRequestFailed = (exception) => {
 export const getUbigeos = () => {
   return api.getUbigeos()
     .then(resp => {
-      onRequestSuccess(resp);
+      onRequestSuccess(resp, "ubigeos");
+    })
+    .catch(onRequestFailed);
+}
+
+export const getPatients = () => {
+  return api.getPatients()
+    .then(resp => {
+      onRequestSuccess(resp, "patients");
+    })
+    .catch(onRequestFailed);
+}
+
+export const savePatientData = (data) => {
+  return api.postPatient(data)
+    .then(resp => {
+      onRequestSuccess(resp, "patients");
     })
     .catch(onRequestFailed);
 }

@@ -80,7 +80,8 @@ export const Input = extField(function(props){
       <input id={props.id} className={"block text-sm leading-5 w-full py-2 px-3 " +
         "border-2 border- text-slate-500 rounded-lg shadow-sm " +
         "focus:outline-none focus:border-blue-500 " }
-        placeholder={props.placeholder} value={value}
+        placeholder={props.placeholder} 
+        value={value}
         type = {type}
         onChange = {(e) => {
           console.log("input custom", e.target.value)
@@ -92,9 +93,9 @@ export const Input = extField(function(props){
 })
 
 export const Select = extField(function(props){
-  let value = props.label || "Selección"
+  let value = props.values[props.value] || "Selección"
   return(
-    <select id={props.id} defaultValue={value} className={"block text-sm leading-5 w-full py-2 px-3 " +
+    <select id={props.id} value={value} className={"block text-sm leading-5 w-full py-2 px-3 " +
       "border-2 border- text-slate-500 rounded-lg shadow-sm " +
       "focus:outline-none focus:border-blue-500"} onChange={(e) => props.onChange(e.target)}>
       <option disabled>{value}</option>

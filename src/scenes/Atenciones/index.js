@@ -12,7 +12,7 @@ export function Atenciones(){
           <Titulo titulo={"ATENCIONES"}/>
           <Agregar to={"/atenciones/nuevo"} label="ATENCIÓN"/>
         </div>
-        <Table>
+        <Table data_patients={[]}>
 
         </Table>
       </div>

@@ -1,8 +1,32 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { useTable, useSortBy, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table'
 
-export function Table(){
-  const data = React.useMemo(
+export function Table(data_patients = []){
+
+  const [data, setData] = useState([]);
+
+  function _calculateAge(birthday) { // birthday is a date
+    const millis = Date.now() - Date.parse(birthday);
+    return new Date(millis).getFullYear() - 1970;
+  }
+
+  
+
+  useEffect(() => {
+    setData(data_patients.data_patients.map( e => {
+      return(
+        {
+          firstName: e.filiation.first_name,
+          lastName: e.filiation.last_name,
+          age: _calculateAge(e.filiation.date_birth),
+          visits: 100,
+          status: 'valid',
+          progress: '10%',
+        }
+      )
+    }))
+  },[])
+ /* const data = React.useMemo(
     () => [
       {
         firstName: 'Hugo',
@@ -38,7 +62,7 @@ export function Table(){
       },
     ],
     []
-  )
+  )*/
 
   const columns = React.useMemo(
     () => [

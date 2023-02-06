@@ -105,7 +105,7 @@ export function NuevoPaciente(){
     console.log('last data', data);
     setPacienteData(data);
 
-    if (e.id == "genero" && e.value == "F"){
+    if (e.id == "gender" && e.value == "F"){
       setTabs(['Filiación','Comorbilidad','Antecedentes','Antecedentes gineco-obstetricos'])
     } else {
       setTabs(['Filiación','Comorbilidad','Antecedentes'])
